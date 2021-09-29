@@ -1,0 +1,75 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://src/player/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/main/Main.gd" type="Script" id=2]
+[ext_resource path="res://assets/bg.png" type="Texture" id=4]
+[ext_resource path="res://assets/new_theme.tres" type="Theme" id=5]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 10, 400 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 200, 10 )
+
+[node name="Main" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -100
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Walls" type="Area2D" parent="."]
+monitorable = false
+collision_layer = 0
+
+[node name="LeftWall" type="CollisionShape2D" parent="Walls"]
+position = Vector2( -10, 400 )
+shape = SubResource( 1 )
+
+[node name="RightWall" type="CollisionShape2D" parent="Walls"]
+position = Vector2( 410, 400 )
+shape = SubResource( 1 )
+
+[node name="TopWall" type="CollisionShape2D" parent="Walls"]
+position = Vector2( 200, -10 )
+shape = SubResource( 2 )
+
+[node name="BottomWall" type="CollisionShape2D" parent="Walls"]
+position = Vector2( 200, 810 )
+shape = SubResource( 2 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 191.515, 81.1228 )
+
+[node name="Overlay" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="Overlay"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Overlay/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "press spacebar to start playing"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="ObstacleSpawner" type="Timer" parent="."]
+
+[connection signal="area_entered" from="Walls" to="." method="_on_Walls_area_entered"]
+[connection signal="body_entered" from="Walls" to="." method="_on_Walls_body_entered"]
+[connection signal="timeout" from="ObstacleSpawner" to="." method="_on_ObstacleSpawner_timeout"]
